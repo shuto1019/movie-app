@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css'
 
 function App() {
@@ -15,13 +16,16 @@ function App() {
       image: "https://media.themoviedb.org/t/p/w300_and_h450_face/v0K2e1t6ocUNnkZ9BeiFdcOT9LG.jpg",
       overview: "父親の帽子店で帽子を作って暮らしていた18歳のソフィーは、荒野の魔女の呪いで90歳の老婆の姿になってしまう。彼女はハンサムだが気弱な魔法使いハウルと出会って、彼の居城でいっしょに暮らすようになるが、その城は4本足で歩く動く城だった。",
     }
-  ]
+  ];
+
+  const [keyWord, setKeyWord] = useState("");
+
   return (
-    //画面の見た目
     <div>
-      <input type="text" />
+      <div>{keyWord}</div>
+      <input type="text" onChange={(e)=>(setKeyWord(e.target.value))} />
       <div>       
-        {movieList.map((movie)=>{
+        {movieList.filter((movie)=>movie.name.includes(keyWord)).map((movie)=>{
           return (
             <div key={movie.id} className="movie-card">
               <h2>{movie.name}</h2>
