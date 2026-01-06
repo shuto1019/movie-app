@@ -1,35 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 
 function App() {
   //jsを書く
-  const movieList = [
-    {
-      id: 1,
-      name: "君の名は",
-      image: "https://media.themoviedb.org/t/p/w300_and_h450_face/yLglTwyFOUZt5fNKm0PWL1PK5gm.jpg",
-      overview: "1,000年に1度のすい星来訪が、1か月後に迫る日本。山々に囲まれた田舎町に住む女子高生の三葉は、町長である父の選挙運動や、家系の神社の風習などに鬱屈（うっくつ）していた。それゆえに都会への憧れを強く持っていたが、ある日彼女は自分が都会に暮らしている少年になった夢を見る。夢では東京での生活を楽しみながらも、その不思議な感覚に困惑する三葉。一方、東京在住の男子高校生・瀧も自分が田舎町に生活する少女になった夢を見る。やがて、その奇妙な夢を通じて彼らは引き合うようになっていくが……。",
-    },
-    {
-      id: 2,
-      name: "ハウルの動く城",
-      image: "https://media.themoviedb.org/t/p/w300_and_h450_face/v0K2e1t6ocUNnkZ9BeiFdcOT9LG.jpg",
-      overview: "父親の帽子店で帽子を作って暮らしていた18歳のソフィーは、荒野の魔女の呪いで90歳の老婆の姿になってしまう。彼女はハンサムだが気弱な魔法使いハウルと出会って、彼の居城でいっしょに暮らすようになるが、その城は4本足で歩く動く城だった。",
-    }
-  ];
 
   const [keyWord, setKeyWord] = useState("");
+  const [movieList, setMovieList] = useState([]);
+
+
+  const fetchMovieList = async() => {
+    const response = await fetch(
+      "https://api.themoviedb.org/3/movie/popular?language=ja&page=1",
+      {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+        },
+      }
+    );
+    const data = await response.json();
+    setMovieList(data.results);
+  }
+
+  
+  useEffect(()=>{
+    fetchMovieList();
+  },[]);
 
   return (
     <div>
       <div>{keyWord}</div>
       <input type="text" onChange={(e)=>(setKeyWord(e.target.value))} />
       <div>       
-        {movieList.filter((movie)=>movie.name.includes(keyWord)).map((movie)=>{
+        {movieList.filter((movie)=>movie.original_title.includes(keyWord)).map((movie)=>{
           return (
             <div key={movie.id} className="movie-card">
-              <h2>{movie.name}</h2>
-              <img src={movie.image} alt={movie.name} />
+              <h2>{movie.original_title}</h2>
+              <img src={`https://media.themoviedb.org/t/p/w600_and_h900_face/${movie.poster_path}`} alt={movie.original_title} />
               <p>{movie.overview}</p>
             </div>
           );
