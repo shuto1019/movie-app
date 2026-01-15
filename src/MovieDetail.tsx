@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import "./MovieDetail.css";
 
 type MovieDetailJson = {
   adult: boolean;
@@ -65,7 +66,19 @@ function MovieDetail() {
                     Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
                 },
             }
-        )
+        );
+          const data = (await response.json()) as MovieDetailJson;
+          setMovie({
+              id: data.id,
+              original_title: data.original_title,
+              overview: data.overview,
+              poster_path: data.poster_path,
+              year: Number(data.release_date.split("-")[0]),
+              rating: data.vote_average,
+              runtime: data.runtime,
+              score: data.popularity,
+              genres: data.genres.map((genre: {id: number; name: string})=>genre.name),
+          });
     };
 
     useEffect(()=>{
@@ -73,8 +86,18 @@ function MovieDetail() {
     },[])
     return (
         <div>
-            <h1>Movie Detail Page</h1>
-            <div>Movie ID: {movieId}</div>
+          {movie && (
+            <div>
+              <h2>{movie.original_title}</h2>
+              <img src={`https://media.themoviedb.org/t/p/w600_and_h900_face/${movie.poster_path}`} alt="" />
+              <p>{movie.overview}</p>
+              <p>{movie.year}</p>
+              <p>{movie.rating}</p>
+              <p>{movie.runtime}</p>
+              <p>{movie.score}</p>
+              <p>{movie.genres}</p>
+            </div>
+          )}
         </div>
     );
 }

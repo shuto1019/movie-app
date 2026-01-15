@@ -62,23 +62,67 @@ function App() {
     fetchMovieList();
   },[keyWord]);
 
+  const heroTitle = "君の名は。";
+  const heroYear = 2016;
+  const heroOverview = "高校生の瀧と三葉は、ある朝突然お互いの体が入れ替わってしまう。最初は戸惑う二人だったが、次第に入れ替わった生活を楽しむようになる。しかし、ある日を境に二人の入れ替わりは起こらなくなり...。";
+  const heroImage = 
+  "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/yLglTwyFOUZt5fNKm0PWL1PK5gm.jpg";
   return (
-    <div>
-      <div>{keyWord}</div>
-      <input type="text" onChange={(e)=>(setKeyWord(e.target.value))} />
-      <div>       
-        {movieList.filter((movie)=>movie.original_title.includes(keyWord)).map((movie)=>{
-          return (
-            <Link to={`/movies/${movie.id}`} key={movie.id} className="movie-card">
-              <h2>{movie.original_title}</h2>
-              <img src={`https://media.themoviedb.org/t/p/w600_and_h900_face/${movie.poster_path}`} alt={movie.original_title} />
-              <p>{movie.overview}</p>
+   <div>
+      <section className="hero-section">
+        {heroImage && (
+          <>
+            <img className="hero-section-bg" src={heroImage} alt={heroTitle} />
+            <div className="hero-section-gradient" />
+          </>
+        )}
+        <div className="hero-section-content">
+          <h1 className="hero-section-title">{heroTitle}</h1>
+          <div className="hero-section-badges">
+            <span className="hero-section-badge">{heroYear}</span>
+          </div>
+          {heroOverview && (
+            <p className="hero-section-overview">{heroOverview}</p>
+          )}
+          <div className="hero-section-actions">
+            <button className="hero-section-btn hero-section-btn-primary">
+              <span>:再生ボタン: Play</span>
+            </button>
+            <button className="hero-section-btn hero-section-btn-secondary">
+              <span>More Info</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <section className="movie-row-section">
+        <h2 className="movie-row-title">
+          {keyWord ? `「${keyWord}」の検索結果` : "人気映画"}
+        </h2>
+        <div className="movie-row-scroll">
+          {movieList.map((movie) => (
+            <Link to={`/movies/${movie.id}`}>
+              <div className="movie-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}`}
+                  alt={movie.original_title}
+                />
+                <h3 className="movie-card-title">{movie.original_title}</h3>
+              </div>
             </Link>
-          );
-        })}
+          ))}
+        </div>
+      </section>
+      <div className="app-search-wrap">
+        <input
+          type="text"
+          className="app-search"
+          placeholder="映画タイトルで検索..."
+          onChange={(e) => setKeyWord(e.target.value)}
+        />
       </div>
-    </div>
-  )
+   </div>
+        
+  );
 }
 
 export default App

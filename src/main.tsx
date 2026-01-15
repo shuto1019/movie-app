@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import MovieDetail from './MovieDetail.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router';
+import Header from './header.tsx';
 
 const router = createBrowserRouter([
   {path: "/", Component: App},
@@ -12,6 +13,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Header>  
     <RouterProvider router={router} />
-  </StrictMode>,
+    </Header>
+  </StrictMode>
 );
